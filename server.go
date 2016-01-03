@@ -6,6 +6,7 @@ import (
 	"errors"
 	"flag"
 	"fmt"
+	"howtotip/helpers"
 	"howtotip/models"
 	"log"
 	"net/http"
@@ -55,14 +56,6 @@ func countriesHandler(w http.ResponseWriter, r *http.Request) {
 	data = countries
 }
 
-func Log(handler http.Handler) http.Handler {
-	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
-		start := time.Now()
-		handler.ServeHTTP(w, r)
-		log.Printf("%s %s %s %v", r.RemoteAddr, r.Method, r.URL, time.Since(start))
-	})
-}
-
 func countryHandler(w http.ResponseWriter, r *http.Request) {
 	var err error
 	var data models.Country
@@ -77,6 +70,17 @@ func countryHandler(w http.ResponseWriter, r *http.Request) {
 	}
 
 	data = models.GetCountry(id)
+}
+
+func routeHandler(w http.ResponseWriter, r *http.Request) {
+}
+
+func handleAction(router helpers.RegexpRouter) http.Handler {
+	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+		start := time.Now()
+		router.ServeHTTP(w, r)
+		log.Printf("%s %s %s %v", r.RemoteAddr, r.Method, r.URL, time.Since(start))
+	})
 }
 
 func readConfig(filename string) (map[string]string, error) {
@@ -140,12 +144,17 @@ func main() {
 
 	models.ConnectDB(cfg["dbhost"], cfg["dbport"], cfg["dbuser"], cfg["dbpass"], cfg["dbname"])
 
-	http.HandleFunc("/countries.json", countriesHandler)
-	http.HandleFunc("/countries/show.json", countryHandler)
+	fs := http.FileServer(http.Dir("assets"))
+	http.Handle("/assets/", http.StripPrefix("/assets/", fs))
+
+	router := new(helpers.RegexpRouter)
+	router.AddRoute("/countries.json", countriesHandler)
+	router.AddRoute("/countries/show.json", countryHandler)
+	router.AddRoute("/.*", routeHandler)
 
 	listen := "127.0.0.1:8080"
 	fmt.Println(fmt.Sprintf("listening on %s", listen))
-	err = http.ListenAndServe(listen, Log(http.DefaultServeMux))
+	err = http.ListenAndServe(listen, handleAction(*router))
 	if err != nil {
 		panic("http.ListenAndServe: " + err.Error())
 	}
