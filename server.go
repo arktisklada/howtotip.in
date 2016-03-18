@@ -147,14 +147,21 @@ func main() {
 	fs := http.FileServer(http.Dir("assets"))
 	http.Handle("/assets/", http.StripPrefix("/assets/", fs))
 
-	router := new(helpers.RegexpRouter)
-	router.AddRoute("/countries.json", countriesHandler)
-	router.AddRoute("/countries/show.json", countryHandler)
-	router.AddRoute("/.*", routeHandler)
+	http.HandleFunc("/countries.json", countriesHandler)
+	http.HandleFunc("/countries/show.json", countryHandler)
 
 	listen := "127.0.0.1:8080"
 	fmt.Println(fmt.Sprintf("listening on %s", listen))
-	err = http.ListenAndServe(listen, handleAction(*router))
+	err = http.ListenAndServe(listen, nil)
+
+	// router := new(helpers.RegexpRouter)
+	// router.AddRoute("/countries.json", countriesHandler)
+	// router.AddRoute("/countries/show.json", countryHandler)
+	// router.AddRoute("/.*", routeHandler)
+
+	// listen := "127.0.0.1:8080"
+	// fmt.Println(fmt.Sprintf("listening on %s", listen))
+	// err = http.ListenAndServe(listen, handleAction(*router))
 	if err != nil {
 		panic("http.ListenAndServe: " + err.Error())
 	}

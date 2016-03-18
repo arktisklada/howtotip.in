@@ -5,6 +5,7 @@ import (
 )
 
 type Country struct {
+	Id      int    `json:"id"`
 	Country string `json:"country"`
 	Slug    string `json:"slug"`
 	Caption string `json:"caption"`
@@ -12,7 +13,7 @@ type Country struct {
 }
 
 func GetCountries() (countries []Country) {
-	statement, err := db.Prepare("SELECT country, slug, caption, body FROM countries")
+	statement, err := db.Prepare("SELECT id, country, slug, caption, body FROM countries")
 	if err != nil {
 		panic(err)
 	}
@@ -33,7 +34,7 @@ func GetCountries() (countries []Country) {
 }
 
 func GetCountry(id int) (country Country) {
-	statement, err := db.Prepare("SELECT country, slug, caption, body FROM countries WHERE id = $1")
+	statement, err := db.Prepare("SELECT id, country, slug, caption, body FROM countries WHERE id = $1")
 	if err != nil {
 		panic(err)
 	}
@@ -44,20 +45,27 @@ func GetCountry(id int) (country Country) {
 		panic(err)
 	}
 
-	country, err = buildCountry(rows)
+	for rows.Next() {
+		country, err = buildCountry(rows)
+		if err != nil {
+			panic(err)
+		}
+	}
 
 	return
 }
 
 func buildCountry(row *sql.Rows) (obj Country, err error) {
+	var id int
 	var country string
 	var slug string
 	var caption string
 	var body string
 
-	err = row.Scan(&country, &slug, &caption, &body)
+	err = row.Scan(&id, &country, &slug, &caption, &body)
 	if err == nil {
 		obj = Country{
+			id,
 			country,
 			slug,
 			caption,
