@@ -1,0 +1,29 @@
+[ng-cloak] {
+  display: none !important;
+}
+
+.transparent-toolbar {
+  position: absolute;
+  top: 0px;
+  left: 0px;
+  right: 0px;
+}
+md-toolbar.md-default-theme:not(.md-menu-toolbar).transparent-toolbar,
+md-toolbar:not(.md-menu-toolbar).transparent-toolbar {
+  color: #000000;
+  background-color: rgba(255,255,255, 0.5);
+}
+md-toolbar.md-default-theme:not(.md-menu-toolbar).transparent-toolbar md-icon,
+md-toolbar:not(.md-menu-toolbar).transparent-toolbar md-icon {
+  color: #000000;
+}
+
+.country-image {
+  background-size: cover;
+  background-position: center center;
+}
+.country-image h1 {
+  color: #ffffff;
+  text-transform: uppercase;
+  text-shadow: 0px 0px 30px rgba(0, 0, 0, 0.7);
+}

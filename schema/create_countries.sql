@@ -1,9 +1,10 @@
 CREATE TABLE countries (
     id integer NOT NULL,
-    country character varying(255),
+    name character varying(255),
     slug character varying(255),
     caption text,
-    body text
+    body text,
+    image character varying(255)
 );
 
 CREATE SEQUENCE countries_id_seq

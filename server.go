@@ -84,7 +84,7 @@ func pageHandler(w http.ResponseWriter, r *http.Request) {
 		name = "home"
 		data = models.GetCountries()
 	}	else {
-		name = "page"
+		name = "country"
 		slug := strings.Split(r.URL.Path, "/")[1]
 		data = models.GetCountry(slug)
 	}
@@ -168,17 +168,19 @@ func main() {
 
 	models.ConnectDB(cfg["dbhost"], cfg["dbport"], cfg["dbuser"], cfg["dbpass"], cfg["dbname"])
 
-	fs := http.FileServer(http.Dir("assets"))
-	http.Handle("/assets/", http.StripPrefix("/assets/", fs))
+	assetServer := http.FileServer(http.Dir("assets"))
+	http.Handle("/assets/", http.StripPrefix("/assets/", assetServer))
 
 	router := new(helpers.RegexpRouter)
-	router.AddRoute("/countries.json", countriesHandler)
-	router.AddRoute("/countries/show.json", countryHandler)
+	router.AddRoute("/api/countries.json", countriesHandler)
+	router.AddRoute("/api/countries/show.json", countryHandler)
 	router.AddRoute("/.*", pageHandler)
+
+	http.Handle("/", routeHandler(*router))
 
 	listen := "127.0.0.1:8080"
 	fmt.Println(fmt.Sprintf("listening on %s", listen))
-	err = http.ListenAndServe(listen, routeHandler(*router))
+	err = http.ListenAndServe(listen, nil)
 	if err != nil {
 		panic("http.ListenAndServe: " + err.Error())
 	}

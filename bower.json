@@ -1,0 +1,24 @@
+{
+  "name": "howtotip",
+  "homepage": "https://github.com/arktisklada/howtotip.in",
+  "authors": [
+    "arktisklada <mail@enorganik.com>"
+  ],
+  "description": "How to tip in major countries",
+  "main": "server.go",
+  "moduleType": [],
+  "license": "MIT",
+  "private": true,
+  "ignore": [
+    "**/.*",
+    "node_modules",
+    "bower_components",
+    "test",
+    "tests"
+  ],
+  "dependencies": {
+    "angular": "^1.5.2",
+    "angular-material": "^1.0.6",
+    "material-design-icons": "^2.2.3"
+  }
+}
