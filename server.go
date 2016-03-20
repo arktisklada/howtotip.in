@@ -8,11 +8,12 @@ import (
 	"fmt"
 	"howtotip/helpers"
 	"howtotip/models"
+	"html/template"
 	"log"
 	"net/http"
 	"os"
+	"path"
 	"reflect"
-	"strconv"
 	"strings"
 	"time"
 )
@@ -52,8 +53,7 @@ func countriesHandler(w http.ResponseWriter, r *http.Request) {
 
 	defer func() { jsonResponder(w, r, data, err) }()
 
-	countries := models.GetCountries()
-	data = countries
+	data = models.GetCountries()
 }
 
 func countryHandler(w http.ResponseWriter, r *http.Request) {
@@ -64,18 +64,35 @@ func countryHandler(w http.ResponseWriter, r *http.Request) {
 
 	r.ParseForm()
 
-	id, err := strconv.Atoi(r.FormValue("id"))
-	if err != nil {
+	slug := r.FormValue("slug")
+	if slug == "" {
 		return
 	}
 
-	data = models.GetCountry(id)
+	data = models.GetCountry(slug)
 }
 
-func routeHandler(w http.ResponseWriter, r *http.Request) {
+func pageHandler(w http.ResponseWriter, r *http.Request) {
+	var name string
+	var data interface{}
+
+	if r.URL.Path == "/" {
+		name = "home"
+		data = models.GetCountries()
+	}	else {
+		name = "page"
+		slug := strings.Split(r.URL.Path, "/")[1]
+		data = models.GetCountry(slug)
+	}
+
+	layout := path.Join("templates", "layout.html")
+	page := path.Join("templates", fmt.Sprintf("%s.html", name))
+
+	t, _ := template.ParseFiles(layout, page)
+	t.ExecuteTemplate(w, "layout", data)
 }
 
-func handleAction(router helpers.RegexpRouter) http.Handler {
+func routeHandler(router helpers.RegexpRouter) http.Handler {
 	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 		start := time.Now()
 		router.ServeHTTP(w, r)
@@ -147,21 +164,14 @@ func main() {
 	fs := http.FileServer(http.Dir("assets"))
 	http.Handle("/assets/", http.StripPrefix("/assets/", fs))
 
-	http.HandleFunc("/countries.json", countriesHandler)
-	http.HandleFunc("/countries/show.json", countryHandler)
+	router := new(helpers.RegexpRouter)
+	router.AddRoute("/countries.json", countriesHandler)
+	router.AddRoute("/countries/show.json", countryHandler)
+	router.AddRoute("/.*", pageHandler)
 
 	listen := "127.0.0.1:8080"
 	fmt.Println(fmt.Sprintf("listening on %s", listen))
-	err = http.ListenAndServe(listen, nil)
-
-	// router := new(helpers.RegexpRouter)
-	// router.AddRoute("/countries.json", countriesHandler)
-	// router.AddRoute("/countries/show.json", countryHandler)
-	// router.AddRoute("/.*", routeHandler)
-
-	// listen := "127.0.0.1:8080"
-	// fmt.Println(fmt.Sprintf("listening on %s", listen))
-	// err = http.ListenAndServe(listen, handleAction(*router))
+	err = http.ListenAndServe(listen, routeHandler(*router))
 	if err != nil {
 		panic("http.ListenAndServe: " + err.Error())
 	}
