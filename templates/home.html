@@ -3,6 +3,7 @@
 {{define "body"}}
   <h1>Hello from a templated home page</h1>
   {{range .}}
-    {{.Country}}
+    <p>{{.Country}}</p>
   {{end}}
+  <hr>
 {{end}}

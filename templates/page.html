@@ -1,5 +1,15 @@
-{{define "title"}}A templated page{{end}}
+<!DOCTYPE HTML>
+<html>
+<head>
+  <title></title>
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
 
-{{define "body"}}
-<h1>Hello from a templated page</h1>
-{{end}}
+  <link rel="stylesheet" href="/assets/pure-min.css">
+</head>
+<body>
+  <h1>{{.Country}}</h1>
+  <h2>{{.Caption}}</h2>
+  <p>{{.Body}}</p>
+</body>
+</html>

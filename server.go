@@ -72,6 +72,10 @@ func countryHandler(w http.ResponseWriter, r *http.Request) {
 	data = models.GetCountry(slug)
 }
 
+type Testdata struct {
+	Name string
+}
+
 func pageHandler(w http.ResponseWriter, r *http.Request) {
 	var name string
 	var data interface{}
@@ -85,11 +89,14 @@ func pageHandler(w http.ResponseWriter, r *http.Request) {
 		data = models.GetCountry(slug)
 	}
 
-	layout := path.Join("templates", "layout.html")
-	page := path.Join("templates", fmt.Sprintf("%s.html", name))
+	// layout := path.Join("templates", "layout.html")
+	// page := path.Join("templates", fmt.Sprintf("%s.html", name))
+	// t, _ := template.ParseFiles(layout, page)
+	// t.ExecuteTemplate(w, "layout", &data)
 
-	t, _ := template.ParseFiles(layout, page)
-	t.ExecuteTemplate(w, "layout", data)
+	page := path.Join("templates", fmt.Sprintf("%s.html", name))
+	t, _ := template.ParseFiles(page)
+	t.Execute(w, &data)
 }
 
 func routeHandler(router helpers.RegexpRouter) http.Handler {
