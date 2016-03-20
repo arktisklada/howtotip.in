@@ -1,46 +1,17 @@
-<!DOCTYPE HTML>
-<html>
-<head>
-  <title>How to tip in {{.Name}}</title>
-  <meta name="viewport" content="width=device-width, initial-scale=1">
-  <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+{{define "title"}}How to tip in {{.Data.Name}}{{end}}
 
-  <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
-  <link rel="stylesheet" href="/assets/components/angular-material/angular-material.css" rel="stylesheet">
-  <link rel="stylesheet" href="/assets/style.css" rel="stylesheet">
-</head>
-<body ng-app="HowToTip" layout="column" ng-cloak>
+{{define "header"}}
   <div layout="column" flex="60" layout-align="end center" layout-padding class="country-image"
-      style="background-image: url(/assets/img/countries/{{.Name}}.jpg);">
-    <md-toolbar layout="row" class="transparent-toolbar">
-      <div class="md-toolbar-tools">
-        <h2><a href="/">How To Tip</a></h2>
-        <span flex></span>
-        <md-button class="md-icon-button" aria-label="Favorite">
-          <md-icon class="material-icons" style="color: red;">favorite</md-icon>
-        </md-button>
-        <md-button class="md-icon-button" aria-label="Search">
-          <md-icon class="material-icons">search</md-icon>
-        </md-button>
-      </div>
-    </md-toolbar>
+      background-image="countries/{{.Data.Name}}.jpg">
 
-    <h1 class="md-display-4" ng-model="country.country">{{.Name}}</h1>
+    {{template "toolbar"}}
+
+    <h1 class="md-display-4">{{.Data.Name}}</h1>
   </div>
+{{end}}
 
-  <div layout="row">
-    <div flex layout-padding>
-      <h2 ng-model="country.caption">{{.Caption}}</h2>
-    </div>
-    <div flex layout-padding>
-      <p ng-model="country.body">{{.Body}}</p>
-    </div>
+{{define "body"}}
+  <div layout-padding class="max-width">
+    <p>{{.Data.Caption}}</p>
   </div>
-
-  <script src="/assets/components/angular/angular.js"></script>
-  <script src="/assets/components/angular-aria/angular-aria.js"></script>
-  <script src="/assets/components/angular-animate/angular-animate.js"></script>
-  <script src="/assets/components/angular-material/angular-material.js"></script>
-  <script src="/assets/javascript.js"></script>
-</body>
-</html>
+{{end}}

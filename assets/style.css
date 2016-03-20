@@ -2,6 +2,16 @@
   display: none !important;
 }
 
+h1, h2, h3, h4, h5, h6 {
+  margin-top: 0.25em;
+  margin-bottom: 0.25em;
+}
+
+.center,
+.md-display-4 {
+  text-align: center;
+}
+
 .transparent-toolbar {
   position: absolute;
   top: 0px;
@@ -21,9 +31,33 @@ md-toolbar:not(.md-menu-toolbar).transparent-toolbar md-icon {
 .country-image {
   background-size: cover;
   background-position: center center;
+  min-height: 500px;
 }
 .country-image h1 {
   color: #ffffff;
   text-transform: uppercase;
   text-shadow: 0px 0px 30px rgba(0, 0, 0, 0.7);
+}
+
+h3.md-display-1 {
+  margin-bottom: 0;
+  padding-bottom: 0;
+  text-align: center;
+}
+
+.footer {
+  background-color: #113;
+  color: #ffffff;
+  padding: 2em;
+}
+
+.max-width {
+  max-width: 1000px;
+  margin: 0px auto;
+}
+
+@media(max-width: 960px) {
+  .md-display-4 {
+    font-size: 54px;
+  }
 }

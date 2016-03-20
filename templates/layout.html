@@ -2,14 +2,29 @@
 <!DOCTYPE HTML>
 <html>
 <head>
-  <title>{{template "title"}}</title>
+  <title>{{template "title" .}}</title>
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
 
-  <link rel="stylesheet" href="/assets/pure-min.css">
+  <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+  <link rel="stylesheet" href="/assets/components/angular-material/angular-material.css" rel="stylesheet">
+  <link rel="stylesheet" href="/assets/style.css" rel="stylesheet">
 </head>
-<body>
-  {{template "body"}}
+<body ng-app="HowToTip" layout="column" ng-controller="AppController as ctrl" ng-cloak
+    ng-init="allCountries=[{{range .Countries}}{name: '{{.Name}}', slug: '{{.Slug}}'},{{end}}]";>
+
+  {{template "header" .}}
+  {{template "body" .}}
+
+  <div layout="row" class="footer" layout-padding layout-align="center center">
+    <p class="md-body-1">&copy;{{.Year}} Clayton R. Liggitt</p>
+  </div>
+
+  <script src="/assets/components/angular/angular.js"></script>
+  <script src="/assets/components/angular-aria/angular-aria.js"></script>
+  <script src="/assets/components/angular-animate/angular-animate.js"></script>
+  <script src="/assets/components/angular-material/angular-material.js"></script>
+  <script src="/assets/javascript.js"></script>
 </body>
 </html>
 {{end}}

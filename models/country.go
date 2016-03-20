@@ -12,7 +12,7 @@ type Country struct {
 }
 
 func GetCountries() (countries []Country) {
-	statement, err := db.Prepare("SELECT name, slug, caption, body FROM countries")
+	statement, err := db.Prepare("SELECT name, slug, caption, body FROM countries ORDER BY name")
 	if err != nil {
 		panic(err)
 	}
