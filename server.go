@@ -94,7 +94,6 @@ func pageHandler(w http.ResponseWriter, r *http.Request) {
 
 	t := time.Now()
 	year := t.Format("2006")
-	log.Printf("%i", year)
 	pageData := PageData{
 		countries,
 		data,
