@@ -1,0 +1,31 @@
+<!DOCTYPE HTML>
+<html>
+<head>
+  <style>
+    html, body, * {
+      font-size: 16px;
+    }
+  </style>
+</head>
+<body>
+<a href="/countries">< back</a>
+<form action="/country_post" method="POST">
+  <h3>{{.Slug}}</h3>
+  <p>
+    <input type="hidden" name="slug" value="{{.Slug}}" />
+  </p>
+
+  <p>
+    <input type="text" name="name" value="{{.Name}}" size="50" />
+  </p>
+
+  <p>
+    <textarea name="caption" rows="10" cols="100">{{.Caption}}</textarea>
+  </p>
+
+  <p>
+    <input type="submit" value="Save">
+  </p>
+</form>
+</body>
+</html>

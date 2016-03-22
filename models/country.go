@@ -54,6 +54,22 @@ func GetCountry(slug string) (country Country) {
 	return
 }
 
+func SaveCountry(slug, name, caption string) (country Country) {
+	statement, err := db.Prepare("UPDATE countries SET name=$1, caption=$2 WHERE slug = $3")
+	if err != nil {
+		panic(err)
+	}
+	defer statement.Close()
+
+	_, err = statement.Exec(name, caption, slug)
+	if err != nil {
+		panic(err)
+	}
+
+	country = GetCountry(slug)
+	return
+}
+
 func buildCountry(row *sql.Rows) (obj Country, err error) {
 	var name string
 	var slug string

@@ -72,6 +72,43 @@ func countryHandler(w http.ResponseWriter, r *http.Request) {
 	data = models.GetCountry(slug)
 }
 
+func getCountriesHandler(w http.ResponseWriter, r *http.Request) {
+	data := models.GetCountries()
+	page := path.Join("templates", "countries.html")
+	tmpl, _ := template.ParseFiles(page)
+	tmpl.Execute(w, &data)
+}
+
+func getCountryHandler(w http.ResponseWriter, r *http.Request) {
+	r.ParseForm()
+	slug := r.FormValue("slug")
+	if slug == "" {
+		return
+	}
+
+	data := models.GetCountry(slug)
+	page := path.Join("templates", "form.html")
+	tmpl, _ := template.ParseFiles(page)
+	tmpl.Execute(w, &data)
+}
+
+func postCountryHandler(w http.ResponseWriter, r *http.Request) {
+	slug := r.PostFormValue("slug")
+	name := r.PostFormValue("name")
+	caption := r.PostFormValue("caption")
+	log.Printf("%s %s %s", slug, name, caption)
+	if slug == "" || name == "" || caption == "" {
+		return
+	}
+
+	models.SaveCountry(slug, name, caption)
+
+	data := models.GetCountry(slug)
+	page := path.Join("templates", "form.html")
+	tmpl, _ := template.ParseFiles(page)
+	tmpl.Execute(w, &data)
+}
+
 type PageData struct {
 	Countries []models.Country
 	Data interface{}
@@ -182,6 +219,11 @@ func main() {
 	router := new(helpers.RegexpRouter)
 	router.AddRoute("/api/countries.json", countriesHandler)
 	router.AddRoute("/api/countries/show.json", countryHandler)
+
+	router.AddRoute("/countries", getCountriesHandler)
+	router.AddRoute("/country_get", getCountryHandler)
+	router.AddRoute("/country_post", postCountryHandler)
+
 	router.AddRoute("/.*", pageHandler)
 
 	http.Handle("/", routeHandler(*router))
