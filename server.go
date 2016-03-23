@@ -32,7 +32,7 @@ func main() {
 
 	http.Handle("/", helpers.RouteHandler(*router))
 
-	listen := "127.0.0.1:8080"
+	listen := config["listen_host"] + ":" + config["listen_port"]
 	fmt.Println(fmt.Sprintf("listening on %s", listen))
 	err = http.ListenAndServe(listen, nil)
 	if err != nil {
