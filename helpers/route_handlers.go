@@ -38,7 +38,7 @@ func CountryHandler(w http.ResponseWriter, r *http.Request) {
 
 func GetCountriesHandler(w http.ResponseWriter, r *http.Request) {
   data := models.GetCountries()
-  page := path.Join("templates", "countries.html")
+  page := path.Join("templates", "countries.tmpl")
   tmpl, _ := template.ParseFiles(page)
   tmpl.Execute(w, &data)
 }
@@ -51,7 +51,7 @@ func GetCountryHandler(w http.ResponseWriter, r *http.Request) {
   }
 
   data := models.GetCountry(slug)
-  page := path.Join("templates", "form.html")
+  page := path.Join("templates", "form.tmpl")
   tmpl, _ := template.ParseFiles(page)
   tmpl.Execute(w, &data)
 }
@@ -68,7 +68,7 @@ func PostCountryHandler(w http.ResponseWriter, r *http.Request) {
   models.SaveCountry(slug, name, caption, live)
 
   data := models.GetCountry(slug)
-  page := path.Join("templates", "form.html")
+  page := path.Join("templates", "form.tmpl")
   tmpl, _ := template.ParseFiles(page)
   tmpl.Execute(w, &data)
 }
@@ -102,9 +102,9 @@ func PageHandler(w http.ResponseWriter, r *http.Request) {
     year,
   }
 
-  layout := path.Join("templates", "layout.html")
-  toolbar := path.Join("templates", "_toolbar.html")
-  page := path.Join("templates", fmt.Sprintf("%s.html", name))
+  layout := path.Join("templates", "layout.tmpl")
+  toolbar := path.Join("templates", "_toolbar.tmpl")
+  page := path.Join("templates", fmt.Sprintf("%s.tmpl", name))
   tmpl, _ := template.ParseFiles(layout, page, toolbar)
   tmpl.ExecuteTemplate(w, "layout", &pageData)
 }
