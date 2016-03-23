@@ -2,8 +2,8 @@ package main
 
 import (
 	"fmt"
-	"howtotip/models"
-	"howtotip/helpers"
+	"howtotip.in/models"
+	"howtotip.in/helpers"
 	"net/http"
 )
 

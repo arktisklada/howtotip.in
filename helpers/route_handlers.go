@@ -2,7 +2,7 @@ package helpers
 
 import (
   "fmt"
-  "howtotip/models"
+  "howtotip.in/models"
   "html/template"
   "log"
   "net/http"
