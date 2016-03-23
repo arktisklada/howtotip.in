@@ -9,10 +9,11 @@ type Country struct {
 	Slug    string `json:"slug"`
 	Caption string `json:"caption"`
 	Body    string `json:"body"`
+	Live		bool
 }
 
 func GetCountries() (countries []Country) {
-	statement, err := db.Prepare("SELECT name, slug, caption, body FROM countries ORDER BY name")
+	statement, err := db.Prepare("SELECT name, slug, caption, body, live FROM countries ORDER BY name")
 	if err != nil {
 		panic(err)
 	}
@@ -33,7 +34,7 @@ func GetCountries() (countries []Country) {
 }
 
 func GetCountry(slug string) (country Country) {
-	statement, err := db.Prepare("SELECT name, slug, caption, body FROM countries WHERE slug = $1")
+	statement, err := db.Prepare("SELECT name, slug, caption, body, live FROM countries WHERE slug = $1")
 	if err != nil {
 		panic(err)
 	}
@@ -54,14 +55,14 @@ func GetCountry(slug string) (country Country) {
 	return
 }
 
-func SaveCountry(slug, name, caption string) (country Country) {
-	statement, err := db.Prepare("UPDATE countries SET name=$1, caption=$2 WHERE slug = $3")
+func SaveCountry(slug, name, caption, live string) (country Country) {
+	statement, err := db.Prepare("UPDATE countries SET name=$1, caption=$2, live=$3 WHERE slug = $4")
 	if err != nil {
 		panic(err)
 	}
 	defer statement.Close()
 
-	_, err = statement.Exec(name, caption, slug)
+	_, err = statement.Exec(name, caption, live, slug)
 	if err != nil {
 		panic(err)
 	}
@@ -75,14 +76,16 @@ func buildCountry(row *sql.Rows) (obj Country, err error) {
 	var slug string
 	var caption string
 	var body string
+	var live bool
 
-	err = row.Scan(&name, &slug, &caption, &body)
+	err = row.Scan(&name, &slug, &caption, &body, &live)
 	if err == nil {
 		obj = Country{
 			name,
 			slug,
 			caption,
 			body,
+			live,
 		}
 	}
 

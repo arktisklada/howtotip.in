@@ -1,41 +1,15 @@
-package server
+package helpers
 
 import (
-  "encoding/json"
   "fmt"
   "howtotip/models"
   "html/template"
   "log"
   "net/http"
   "path"
-  "reflect"
   "strings"
   "time"
 )
-
-func jsonResponder(w http.ResponseWriter, r *http.Request, data interface{}, err error) {
-  w.Header().Set("Content-Type", "application/json")
-  enc := json.NewEncoder(w)
-  if err != nil {
-    http.Error(w, "", http.StatusBadRequest)
-    enc.Encode(map[string]string{"error": err.Error()})
-  } else {
-    kind := reflect.TypeOf(data).Kind()
-    if (kind == reflect.Slice || kind == reflect.Map || kind == reflect.Ptr) && reflect.ValueOf(data).IsNil() {
-      if kind == reflect.Slice {
-        fmt.Fprintf(w, "[]")
-      } else {
-        fmt.Fprintf(w, "{}")
-      }
-    } else {
-      enc.Encode(data)
-    }
-  }
-}
-
-func successResponder(w http.ResponseWriter, r *http.Request, err error) {
-  jsonResponder(w, r, map[string]bool{"success": err == nil}, err)
-}
 
 func CountriesHandler(w http.ResponseWriter, r *http.Request) {
   var err error
@@ -86,12 +60,12 @@ func PostCountryHandler(w http.ResponseWriter, r *http.Request) {
   slug := r.PostFormValue("slug")
   name := r.PostFormValue("name")
   caption := r.PostFormValue("caption")
-  log.Printf("%s %s %s", slug, name, caption)
-  if slug == "" || name == "" || caption == "" {
+  live := r.PostFormValue("live")
+  if slug == "" || name == "" || caption == "" || live == "" {
     return
   }
 
-  models.SaveCountry(slug, name, caption)
+  models.SaveCountry(slug, name, caption, live)
 
   data := models.GetCountry(slug)
   page := path.Join("templates", "form.html")
@@ -108,16 +82,17 @@ type PageData struct {
 func PageHandler(w http.ResponseWriter, r *http.Request) {
   var name string
   var data interface{}
+  var countries []models.Country
 
   if r.URL.Path == "/" {
     name = "home"
+    countries = models.GetCountries()
   } else {
     name = "country"
+    countries = models.GetCountries()
     slug := strings.Split(r.URL.Path, "/")[1]
     data = models.GetCountry(slug)
   }
-
-  countries := models.GetCountries()
 
   t := time.Now()
   year := t.Format("2006")
@@ -141,4 +116,3 @@ func RouteHandler(router RegexpRouter) http.Handler {
     log.Printf("%s %s %s %v", r.RemoteAddr, r.Method, r.URL, time.Since(start))
   })
 }
-

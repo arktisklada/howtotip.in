@@ -6,27 +6,47 @@
       font-size: 16px;
     }
   </style>
+  <script>
+    document.addEventListener('DOMContentLoaded', function() {
+      document.getElementById("live-checkbox").addEventListener("change", function() {
+        console.log("asdF")
+        document.getElementById('live-hidden').disabled = document.getElementById("live-checkbox").checked;
+      });
+    });
+  </script>
 </head>
 <body>
 <a href="/countries">< back</a>
 <form action="/country_post" method="POST">
-  <h3>{{.Slug}}</h3>
-  <p>
-    <input type="hidden" name="slug" value="{{.Slug}}" />
-  </p>
-
-  <p>
-    <input type="text" name="name" value="{{.Name}}" size="50" />
-  </p>
-
-  <p>
-    <textarea name="caption" rows="10" cols="100">{{.Caption}}</textarea>
-  </p>
-
-  <p>
-    <input type="submit" value="Save">
-  </p>
+  <h3>Editing: {{.Name}}</h3>
+  <table border="0">
+    <tr>
+      <td><label for="slug">Slug</label></td>
+      <td><input name="slug" type="hidden" value="{{.Slug}}" />{{.Slug}}</td>
+    </tr>
+    <tr>
+      <td><label for="name">Name</label></td>
+      <td><input name="name" type="text" value="{{.Name}}" size="50" /></td>
+    </tr>
+    <tr>
+      <td><label for="caption">Caption</label></td>
+      <td><textarea name="caption" rows="10" cols="100">{{.Caption}}</textarea></td>
+    </tr>
+    <tr>
+      <td><label for="live">Live</label></td>
+      <td>
+        <input name="live" type="hidden" value="n" {{if .Live}}disabled="disabled" {{end}} id="live-hidden" />
+        <input name="live" type="checkbox" value="y" {{if .Live}}checked="checked" {{end}} id="live-checkbox" />
+      </td>
+    </tr>
+    <tr>
+      <td colspan="2"><input type="submit" value="Save"></td>
+    </tr>
+  </table>
 </form>
+
+<br><br>
+Raw body content:
 <pre>
 {{.Body}}
 </pre>

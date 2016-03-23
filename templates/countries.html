@@ -1,3 +1,16 @@
-{{range .}}
-  <p><a href="/country_get?slug={{.Slug}}">{{.Name}}</a>
-{{end}}
+<table border="0" cellpadding="2">
+  <tr>
+    <th>Name</th>
+    <th>Slug</th>
+    <th>Live</th>
+    <th></th>
+  </tr>
+  {{range .}}
+    <tr>
+      <td>{{.Name}}</td>
+      <td>{{.Slug}}</td>
+      <td>{{.Live}}</td>
+      <td><a href="/country_get?slug={{.Slug}}">Edit</a></td>
+    </tr>
+  {{end}}
+</table>
