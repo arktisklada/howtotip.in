@@ -22,7 +22,7 @@
   </script>
 </head>
 <body ng-app="HowToTip" layout="column" ng-controller="AppController as ctrl" ng-cloak
-    ng-init="allCountries=[{{range .Countries}}{name: '{{.Name}}', slug: '{{.Slug}}'},{{end}}]";>
+    ng-init="allCountries=[{{range .Countries}}{{if .Live}}{name: '{{.Name}}', slug: '{{.Slug}}'},{{end}}{{end}}]";>
 
   {{template "header" .}}
   {{template "body" .}}
